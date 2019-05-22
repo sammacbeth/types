@@ -1,0 +1,16 @@
+{
+  "name": "@sammacbeth/types",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sam Macbeth",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^12.0.2",
+    "dtslint": "^0.7.4",
+    "typescript": "^3.4.5"
+  }
+}
