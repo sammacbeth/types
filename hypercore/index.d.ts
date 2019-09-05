@@ -81,6 +81,8 @@ declare namespace Hypercore {
         encrypt?: boolean
     }
 
+    type SuccessCallback = (error: Error) => void
+
     class Hypercore extends EventEmitter {
         /**
          * Create a new hypercore feed stored at the specified path. Key is loaded from storage,
@@ -155,7 +157,7 @@ declare namespace Hypercore {
          * 
          * Populated after `ready` has been emitted. Will be `0` before the event.
          */
-        byteLengh: number
+        byteLength: number
 
         /**
          * Return per-peer and total upload/download counts.
@@ -169,14 +171,14 @@ declare namespace Hypercore {
          * @param data 
          * @param callback 
          */
-        append(data: any, callback?: (err: Error, seq: number) => void): void
+        append(data: any, callback?: (err: Error, seq?: number) => void): void
 
         /**
          * Get a block of data. If the data is not available locally this method will prioritize and wait for the data to be downloaded before calling the callback.
          * @param index 
          * @param callback 
          */
-        get(index: number, options: GetOptions, callback: (err: Error, data: any) => void): void
+        get(index: number, options: GetOptions, callback: (err: Error, data?: any) => void): void
         get(index: number, callback: (err: Error, data: any) => void): void
 
         /**
@@ -186,16 +188,16 @@ declare namespace Hypercore {
          * @param options 
          * @param callback 
          */
-        getBatch(start: number, end: number, options: GetOptions, callback: (err: Error, data: any[]) => void): void
-        getBatch(start: number, end: number, callback: (err: Error, data: any[]) => void): void
+        getBatch(start: number, end: number, options: GetOptions, callback: (err: Error, data?: any[]) => void): void
+        getBatch(start: number, end: number, callback: (err: Error, data?: any[]) => void): void
 
         /**
          * Get the block of data at the tip of the feed. This will be the most recently appended block.
          * @param options 
          * @param callback 
          */
-        head(options: GetOptions, callback: (err: Error, data: any) => void): void
-        head(callback: (err: Error, data: any) => void): void
+        head(options: GetOptions, callback: (err: Error, data?: any) => void): void
+        head(callback: (err: Error, data?: any) => void): void
 
         /**
          * Download a range of data. Callback is called when all data has been downloaded.
@@ -206,8 +208,8 @@ declare namespace Hypercore {
          * @param range 
          * @param callback 
          */
-        download(range?: Range, callback?: () => void): void
-        download(callback?: () => void): void
+        download(range?: Range, callback?: SuccessCallback): void
+        download(callback?: SuccessCallback): void
 
         /**
          * Cancel a previous download request.
@@ -220,8 +222,8 @@ declare namespace Hypercore {
          * @param index 
          * @param callback 
          */
-        signature(index: number, callback: (err: Error, signature: Signature) => void): void
-        signature(callback: (err: Error, signature: Signature) => void): void
+        signature(index: number, callback: (err: Error, signature?: Signature) => void): void
+        signature(callback: (err: Error, signature?: Signature) => void): void
 
         /**
          * Verify a signature is correct for the data up to index, which must be the last signed block associated with the signature.
@@ -229,14 +231,14 @@ declare namespace Hypercore {
          * @param signature 
          * @param callback 
          */
-        verify(index: number, signature: Signature, callback: (err: Error, success: boolean) => void): void
+        verify(index: number, signature: Signature, callback: (err: Error, success?: boolean) => void): void
 
         /**
          * Retrieve the root hashes for given `index`.
          * @param index 
          * @param callback 
          */
-        rootHashes(index: number, callback: (err: Error, roots: Node[]) => void): void
+        rootHashes(index: number, callback: (err: Error, roots?: Node[]) => void): void
 
         /**
          * Returns total number of downloaded blocks within range. If `end` is not specified it 
@@ -270,8 +272,8 @@ declare namespace Hypercore {
          * @param end 
          * @param callback 
          */
-        clear(start: number, end: number, callback?: () => void): void
-        clear(start: number, callback?: () => void): void
+        clear(start: number, end: number, callback?: SuccessCallback): void
+        clear(start: number, callback?: SuccessCallback): void
 
         /**
          * Seek to a byte offset.
@@ -281,7 +283,7 @@ declare namespace Hypercore {
          * @param byteOffset 
          * @param callback 
          */
-        seek(byteOffset: number, callback: (err: Error, index: number, relativeOffset: number) => void): void
+        seek(byteOffset: number, callback: (err: Error, index?: number, relativeOffset?: number) => void): void
 
         /**
          * Wait for the feed to contain at least `minLength` elements. If you do not provide 
@@ -291,8 +293,8 @@ declare namespace Hypercore {
          * @param minLength 
          * @param callback 
          */
-        update(minLength: number, callback?: () => void): void
-        update(callback?: () => void): void
+        update(minLength: number, callback?: SuccessCallback): void
+        update(callback?: SuccessCallback): void
 
         /**
          * Create a readable stream of data.
@@ -316,7 +318,7 @@ declare namespace Hypercore {
          * 
          * Calls the callback with (err) when all storage has been closed.
          */
-        close(callback?: (err: Error) => void): void
+        close(callback?: SuccessCallback): void
 
         /**
          * Audit all data in the feed. Will check that all current data stored matches the hashes
@@ -326,3 +328,5 @@ declare namespace Hypercore {
         audit(callback?: (result: { valid: number, invalid: number }) => void): void
     }
 }
+
+export default Hypercore.Hypercore;
