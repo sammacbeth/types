@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
 import { Stats } from 'fs';
 import Hypercore from '../hypercore';
+import { Duplex } from 'stream';
 
 // Type definitions for hyperdrive 9.16.0
 // Project: https://github.com/mafintosh/hyperdrive
@@ -51,6 +52,12 @@ declare namespace Hyperdrive {
 
   type WaitOption = {
     wait?: boolean
+  }
+
+  type ReplicationOptions = {
+    live?: boolean
+    download?: boolean
+    upload?: boolean
   }
 
   type SuccessCallback = (error: Error) => void
@@ -135,9 +142,14 @@ declare namespace Hyperdrive {
 
     // TODO: Find actual shapes
     history(options?: any): any
-    extension(name: string, message: any): void
+    extension(name: string, message: Buffer): void
     createDiffStream(version: number, options?: any): any
+
+    replicate(options?: ReplicationOptions): Duplex
   }
 }
 
 export default Hyperdrive.Hyperdrive;
+export {
+  Hyperdrive,
+}

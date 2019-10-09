@@ -77,8 +77,16 @@ declare namespace Hypercore {
 
     type ReplicationOptions = {
         live?: boolean
+        ack?: boolean
         download?: boolean
         encrypt?: boolean
+    }
+
+    type KeyPairOption = {
+        keyPair?: {
+            publicKey: Buffer,
+            secretKey: Buffer
+        }
     }
 
     type SuccessCallback = (error: Error) => void
@@ -308,12 +316,6 @@ declare namespace Hypercore {
         createWriteStream(): NodeJS.WritableStream
 
         /**
-         * Create a replication stream. You should pipe this to another hypercore instance.
-         * @param options 
-         */
-        replicate(options?: ReplicationOptions): Duplex
-
-        /**
          * Fully close this feed.
          * 
          * Calls the callback with (err) when all storage has been closed.
@@ -326,6 +328,27 @@ declare namespace Hypercore {
          * @param callback 
          */
         audit(callback?: (result: { valid: number, invalid: number }) => void): void
+
+        /**
+         * Send an extension message to all connected peers. name should be in the list of
+         * extensions from the constructor. message should be a Buffer.
+         * @param name 
+         * @param message 
+         */
+        extension(name: string, message: Buffer): void
+
+        /**
+         * Create a replication stream (v6 Hypercores). You should pipe this to another hypercore instance.
+         * @param options 
+         */
+        replicate(options?: ReplicationOptions): Duplex
+
+        /**
+         * Create a replication stream (v7 Hypercores)
+         * @param isInitiator 
+         * @param options 
+         */
+        replicate(isInitiator: boolean, options?: ReplicationOptions & KeyPairOption): Duplex
     }
 }
 
